@@ -1,0 +1,125 @@
+<script src="./open_appl_folder/js/jquery.js" type="text/javascript" language="javascript">	</script>
+<script language="javascript">
+
+//---------Начальный ввод и проверка pin
+if(document.getElementById('pin').value == 0)
+{
+	document.getElementById('pin').value = Math.floor(Math.random() *9000 + 1000, 10000);
+}
+//---------Функция валидности пин-кода
+var disPin = 0;
+function pinTry()
+{
+	var pinValid = document.querySelectorAll("#pin:invalid");
+  if(pinValid.length != 0)
+  {
+    $("#pin_alert").fadeTo(200,0.1,function() {
+			$(this).html('Пин-код должен состоять из 4ех чисел').addClass('messagebox2').fadeTo(900,1); });
+    $("#pin_alert").attr(style="text-color: black");
+	}
+	else
+	{
+		$.post("./open_appl_folder/user_availability.php",{ pin:$("#pin").val() } ,function(data)
+			{
+				if(data == 'yes')
+				{
+					$("#pin_alert").fadeTo(200,0.1,function() {
+						$(this).html('Такой пин-код занят').addClass('messagebox2').fadeTo(900,1); });
+					disPin = 0;
+				}
+				else if(data == 'no')
+				{
+					$("#pin_alert").fadeTo(200,0.1,function() {
+						$(this).html('Пин-код доступен для регистрации').addClass('messagebox2').fadeTo(900,1);});
+					disPin = 1;
+				}
+				else
+				{
+					$("#pin_alert").fadeTo(200,0.1,function() {
+						$(this).html('ОШИБКА DB').addClass('messagebox2').fadeTo(900,1);});
+					disPin = 0;
+				}
+			});
+	}
+}
+pinTry();
+
+//---------Функция валидности ФИО
+function nameTry() {
+	var nameValid = document.querySelectorAll("#name:invalid");
+		if(document.getElementById('name').value.length != 0)
+		{
+			$("#msgbox").text('Проверка...').fadeIn("fast");
+	      if(nameValid.length != 0)
+	      {
+		      $("#msgbox").fadeTo(200,0.1,function() {
+						$(this).html('Неправильно набрано ФИО').addClass('messagebox').fadeTo(900,1);
+					});
+	    	}
+	    	else
+	    	{
+	    		$("#msgbox").fadeTo(200,0.1,function() {
+		    		$("#msgbox").html('Удовлетворительное имя').addClass('messagebox').fadeTo(900,1);
+		    	});
+	  		}
+		}
+		else { $('#msgbox').text(''); }
+}
+nameTry();
+
+//---------Счётчик знаков для "обращения" заявки
+function countChar() {
+  var count_char = document.getElementById("count_char");
+  var count_char_textarea = document.getElementById("appl_textarea");
+  count_char.value = 4096 - count_char_textarea.value.replace(/ *n*r*t*/g, "").length;
+}
+
+//---------Проверка ФИО
+var nameValid = document.querySelectorAll("#name:invalid");
+$(document).ready(function()
+{
+	$("#name").blur(function()
+	{
+		nameTry();
+	});
+});
+
+//--------------Проверка на валидность пин-кода
+$(document).ready(function()
+{
+	$("#pin").blur(function()
+	{
+		if(document.getElementById('pin').value.length != 0) { pinTry(); }
+		else { $('#pin_alert').text(''); }
+	});
+});
+
+//--------------Вкл/выкл кнопки отправки
+var allApplForm = document.querySelectorAll(":invalid");
+$(document.querySelectorAll(":required")).blur(function()
+{
+	allApplForm = document.querySelectorAll(":invalid");
+	if (allApplForm.length == 0) { $("#submit").removeAttr('disabled');}
+	else { $("#submit").attr("disabled", true); }
+});
+
+$(document.querySelectorAll(":required")).ready(function()
+{
+	allApplForm = document.querySelectorAll(":invalid");
+	if (allApplForm.length == 0 && disPin == 1) { $("#submit").removeAttr('disabled');}
+	else { $("#submit").attr("disabled", true); }
+});
+
+//--------------Поле заявок
+if($("#appls_s").val() != null) {
+	document.getElementById('lab_appls_s').hidden=false;
+	document.getElementById('appls_s').hidden=false;
+	$("#appls_s").val(null);
+}
+
+$(document).ready(function() {
+	$("#appls_s").change(function(){
+		window.location.href = './open_appl_folder/test.php';
+	});
+});
+</script>

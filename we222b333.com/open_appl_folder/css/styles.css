@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+section {
+	background-color: white;
+	border: 2px solid black;
+   	position: relative;
+    min-height: 350px;
+    min-width: 700px;
+    margin: 10% 550px;
+    height: auto;
+    width: auto;
+    max-height: 800px;
+    max-width: 800px;
+}
+
+#appls {
+	margin-right: 10%;
+	position: absolute;
+    margin-left: 20px;
+}
+
+body {
+	background-color: grey;
+}
+
+ul {
+	list-style-type: none;
+}
+
+h3 {
+	position: static;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.applareas {
+	position: static;
+	width: 60%;
+}
+
+input#count_char {
+	border-style: none;
+	text-align: right;
+}
+
+#appl_textarea {
+	width: 90%;
+}
+
+#submit {
+	width: 90%;
+	height: 40px;
+	margin-left: 5%;
+	margin-bottom: 15px;
+}
+
+input:invalid {
+	border:1px solid red;
+}
+
+textarea:invalid {
+	border:1px solid red;
+}
